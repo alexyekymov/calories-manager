@@ -31,6 +31,14 @@ public class MealsUtil {
         mealsTo.forEach(System.out::println);
     }
 
+    public static List<MealTo> getTos(Collection<Meal> meals, int caloriesPerDay) {
+        return getFiltered(meals, caloriesPerDay, meal -> true);
+    }
+
+    public static List<MealTo> getFilteredTos(Collection<Meal> meals, int caloriesPerDay, LocalTime startTime, LocalTime endTime) {
+        return getFiltered(meals, caloriesPerDay, meal -> TimeUtil.isBetweenInclusive(meal.getTime(), startTime, endTime));
+    }
+
     private static List<MealTo> getFiltered(Collection<Meal> meals, int caloriesPerDay, Predicate<Meal> filter) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(
