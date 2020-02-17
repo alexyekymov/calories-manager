@@ -10,8 +10,8 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class userServlet extends HttpServlet {
-    private static final Logger log = getLogger(userServlet.class);
+public class UserServlet extends HttpServlet {
+    private static final Logger log = getLogger(UserServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
