@@ -1,5 +1,6 @@
 package com.alex.web;
 
+import com.alex.util.MealsUtil;
 import org.slf4j.Logger;
 
 import javax.servlet.ServletException;
@@ -15,7 +16,8 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        log.debug("forward to meals");
+        log.info("get all");
+        req.setAttribute("meals", MealsUtil.getTos(MealsUtil.MEALS, MealsUtil.CALORIES_PER_DAY));
         req.getRequestDispatcher("/meals.jsp").forward(req, resp);
     }
 }
