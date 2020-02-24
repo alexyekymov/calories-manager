@@ -1,7 +1,7 @@
 package com.alex.web;
 
 import com.alex.model.Meal;
-import com.alex.repository.InMemoryMealRepository;
+import com.alex.repository.inmemory.InMemoryMealRepository;
 import com.alex.util.MealsUtil;
 import org.slf4j.Logger;
 
