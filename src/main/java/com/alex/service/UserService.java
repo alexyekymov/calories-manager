@@ -11,6 +11,10 @@ import static com.alex.util.ValidationUtil.checkNotFoundWithId;
 public class UserService {
     private UserRepository repository;
 
+    public void setRepository(UserRepository repository) {
+        this.repository = repository;
+    }
+
     public User create(User user) {
         return repository.save(user);
     }

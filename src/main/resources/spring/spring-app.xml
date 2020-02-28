@@ -4,4 +4,7 @@
 
     <bean class="com.alex.repository.inmemory.InMemoryUserRepository" id="inmemoryUserRepository"/>
 
+    <bean class="com.alex.service.UserService">
+        <property name="repository" ref="inmemoryUserRepository"/>
+    </bean>
 </beans>
