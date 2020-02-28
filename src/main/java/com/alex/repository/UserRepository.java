@@ -5,7 +5,7 @@ import com.alex.model.User;
 import java.util.List;
 
 public interface UserRepository {
-    User save(User save);
+    User save(User user);
 
     boolean delete(int id);
 
