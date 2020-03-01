@@ -3,12 +3,14 @@ package com.alex.repository.inmemory;
 import com.alex.model.User;
 import com.alex.repository.UserRepository;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+@Repository
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = getLogger(InMemoryUserRepository.class);
 

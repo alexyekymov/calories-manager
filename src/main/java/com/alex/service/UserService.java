@@ -2,16 +2,20 @@ package com.alex.service;
 
 import com.alex.model.User;
 import com.alex.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.alex.util.ValidationUtil.checkNotFound;
 import static com.alex.util.ValidationUtil.checkNotFoundWithId;
 
+@Service
 public class UserService {
-    private UserRepository repository;
 
-    public void setRepository(UserRepository repository) {
+    private final UserRepository repository;
+
+    public UserService(UserRepository repository) {
         this.repository = repository;
     }
 
