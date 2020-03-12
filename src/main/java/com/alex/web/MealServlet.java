@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -28,7 +27,7 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
         String id = req.getParameter("id");
 
@@ -36,7 +35,7 @@ public class MealServlet extends HttpServlet {
                 LocalDateTime.parse(req.getParameter("dateTime")),
                 req.getParameter("description"),
                 Integer.parseInt(req.getParameter("calories")));
-        log.info(meal.isNew() ? "Create new meal" : "Update {}", meal.getId());
+        log.info(meal.isNew() ? "Create new meal" : "Update meal id: {}", meal.getId());
         repository.save(meal);
         resp.sendRedirect("meals");
     }
@@ -51,17 +50,6 @@ public class MealServlet extends HttpServlet {
                 log.info("Delete {}", id);
                 repository.delete(id);
                 resp.sendRedirect("meals");
-                break;
-            case "create":
-            case "update":
-                final Meal meal = "create".equals(action) ?
-                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        repository.get(getId(req));
-//                req.setAttribute("meal", meal);
-//                req.getRequestDispatcher("/mealForm.jsp").forward(req, resp);
-                req.setAttribute("meals",
-                        MealsUtil.getTos(repository.getAll(), MealsUtil.CALORIES_PER_DAY));
-                req.getRequestDispatcher("/meals.jsp").forward(req, resp);
                 break;
             case "all":
             default:
