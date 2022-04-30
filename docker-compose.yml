@@ -1,0 +1,12 @@
+version: '3'
+services:
+  webapp:
+    image: webapp
+    restart: always
+    container_name: caloman
+    ports:
+      - "80:8080"
+    build:
+      context: ./
+    volumes:
+      - ./src/:/usr/local/tomcat/caloman
