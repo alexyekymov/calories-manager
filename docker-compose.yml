@@ -2,11 +2,13 @@ version: '3'
 services:
   webapp:
     image: webapp
-    restart: always
+    restart: unless-stopped
     container_name: caloman
     ports:
-      - "80:8080"
+      - "8080:8080"
     build:
       context: ./
+    environment:
+      - CALORIES_MANAGER_ROOT=/usr/local/tomcat/caloman
     volumes:
-      - ./src/:/usr/local/tomcat/caloman
+      - ./:/usr/local/tomcat/caloman
