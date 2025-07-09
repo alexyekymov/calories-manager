@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
-public abstract class BaseEntity {
+public abstract class BaseEntity implements HasId {
 
     @Id
     protected Integer id;
