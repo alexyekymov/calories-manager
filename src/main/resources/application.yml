@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: calories-manager
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/caloman
+    driver-class-name: org.postgresql.Driver
+    username: user
+    password: password
