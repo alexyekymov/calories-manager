@@ -23,8 +23,9 @@ public class MealController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MealResponse> getAll() {
-        return responseMapper.toDTOs(service.getAll());
+    public ResponseEntity<List<MealResponse>> getAll() {
+        List<MealResponse> resp = responseMapper.toDTOs(service.getAll());
+        return ResponseEntity.ok(resp);
     }
 
     @GetMapping("/{id}")
