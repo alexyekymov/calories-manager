@@ -3,7 +3,6 @@ spring:
     name: calories-manager
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/caloman
-    driver-class-name: org.postgresql.Driver
-    username: user
-    password: password
+    url: jdbc:${DB_DRIVER}://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+    username: ${DB_USERNAME:user}
+    password: ${DB_PASSWORD:password}
