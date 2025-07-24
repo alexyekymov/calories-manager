@@ -7,4 +7,5 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MealResponseMapper extends Mappable<Meal, MealResponse> {
+    MealResponse toDTOWithExcess(Meal meal, boolean excess);
 }

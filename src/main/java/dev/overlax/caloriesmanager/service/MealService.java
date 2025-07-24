@@ -2,12 +2,14 @@ package dev.overlax.caloriesmanager.service;
 
 import dev.overlax.caloriesmanager.model.Meal;
 import dev.overlax.caloriesmanager.repository.MealRepository;
+import dev.overlax.caloriesmanager.util.DateTimeUtils;
+import dev.overlax.caloriesmanager.util.UserUtils;
+import dev.overlax.caloriesmanager.web.payload.MealResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class MealService {
 
     private final MealRepository repository;
+    private final MealProcessor processor;
 
     public List<Meal> getAll() {
         return repository.findAll();
@@ -26,9 +29,12 @@ public class MealService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Meal with {} not found", id)));
     }
 
-    public List<Meal> getBetween(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        //TODO fix a null-value issue
-        return repository.
-                findAllByDateTimeBetween(LocalDateTime.of(startDate, startTime), LocalDateTime.of(endDate, endTime));
+    public List<MealResponse> getBetween(LocalDate startDate, LocalTime startTime,
+                                         LocalDate endDate, LocalTime endTime) {
+
+        List<Meal> mealsByDateOrAll = repository.findAllByDateTimeGreaterThanEqualAndDateTimeLessThanOrderByDateTime(
+                DateTimeUtils.atStartOfDayOrMinDate(startDate), DateTimeUtils.atStartOfNextDayOrMaxDate(endDate));
+
+        return processor.getFilteredResponse(mealsByDateOrAll, UserUtils.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
     }
 }

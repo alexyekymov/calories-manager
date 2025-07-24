@@ -46,7 +46,7 @@ public class MealController {
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime) {
 
-        List<Meal> mealsBetween = service.getBetween(startDate, startTime, endDate, endTime);
-        return ResponseEntity.ok(responseMapper.toDTOs(mealsBetween));
+        List<MealResponse> mealsBetween = service.getBetween(startDate, startTime, endDate, endTime);
+        return ResponseEntity.ok(mealsBetween);
     }
 }

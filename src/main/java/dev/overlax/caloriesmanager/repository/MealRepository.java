@@ -10,7 +10,5 @@ import java.util.List;
 @Repository
 public interface MealRepository extends JpaRepository<Meal, Integer> {
 
-    List<Meal> findAllByDateTimeBetween(LocalDateTime dateTimeAfter, LocalDateTime dateTimeBefore);
-
-    List<Meal> findAllByDateTimeAfterAndDateTimeBefore(LocalDateTime dateTimeAfter, LocalDateTime dateTimeBefore);
+    List<Meal> findAllByDateTimeGreaterThanEqualAndDateTimeLessThanOrderByDateTime(LocalDateTime dateTimeAfter, LocalDateTime dateTimeBefore);
 }

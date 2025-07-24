@@ -1,6 +1,6 @@
 package dev.overlax.caloriesmanager.model;
 
-import dev.overlax.caloriesmanager.util.UserUtil;
+import dev.overlax.caloriesmanager.util.UserUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class User extends NamedEntity implements HasIdAndEmail {
     private Date registered = new Date();
 
     @Column(name = "calories_per_day")
-    private Integer caloriesPerDay = UserUtil.DEFAULT_CALORIES_PER_DAY;
+    private Integer caloriesPerDay = UserUtils.DEFAULT_CALORIES_PER_DAY;
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
