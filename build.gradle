@@ -46,3 +46,9 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.register('printVersion') {
+    doLast {
+        println project.version
+    }
+}
