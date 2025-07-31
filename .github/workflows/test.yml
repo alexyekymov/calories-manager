@@ -27,31 +27,47 @@ jobs:
         run: |
             echo "NEW_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
 
-      - name: Download latest_version.txt from the storage
-        uses: actions/download-artifact@v4
-        with:
-          name: latest_version
-        continue-on-error: true
+#      - name: Download latest_version.txt from the storage
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: latest_version
+#        continue-on-error: true
+#
+#      - name: Load APP_VERSION from file
+#        run: |
+#            if [ -f latest_version.txt ]; then
+#              echo "APP_VERSION=$(cat latest_version.txt)" >> $GITHUB_ENV
+#            else
+#              echo "No previous version found. Skipping version check."
+#            fi
 
-      - name: Load APP_VERSION from file
-        run: |
-            if [ -f latest_version.txt ]; then
-              echo "APP_VERSION=$(cat latest_version.txt)" >> $GITHUB_ENV
-            else
-              echo "No previous version found. Skipping version check."
-            fi
 
-      - name: Fail if version did not change
+      - name: Check if Docker image tag exists on Docker Hub
+        env:
+          IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }}
+          TAG: ${{ env.NEW_VERSION }}
         run: |
-          echo "Previous version: $APP_VERSION"
-          echo "Current version: $NEW_VERSION"
-          if [ "$APP_VERSION" = "$NEW_VERSION" ]; then
-            echo "❌ Version $NEW_VERSION was already used."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            https://hub.docker.com/v2/repositories/$IMAGE/tags/$TAG/)
+          if [ "$STATUS" = "200" ]; then
+            echo "❌ Tag '$TAG' already exists in Docker Hub for image '$IMAGE'!"
             echo "🔧 Please bump the version in build.gradle before pushing."
             exit 1
           else
-            echo "✅ Version changed, continuing."
+            echo "✅ Tag '$TAG' does not exist, proceeding with build."
           fi
+
+#      - name: Fail if version did not change
+#        run: |
+#          echo "Previous version: $APP_VERSION"
+#          echo "Current version: $NEW_VERSION"
+#          if [ "$APP_VERSION" = "$NEW_VERSION" ]; then
+#            echo "❌ Version $NEW_VERSION was already used."
+#            echo "🔧 Please bump the version in build.gradle before pushing."
+#            exit 1
+#          else
+#            echo "✅ Version changed, continuing."
+#          fi
 
       - name: run tests
         run: ./gradlew test
