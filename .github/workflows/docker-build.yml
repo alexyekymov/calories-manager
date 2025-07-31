@@ -29,7 +29,7 @@ jobs:
         run: echo ${{ env.APP_VERSION }} > latest_version.txt
 
       - name: Upload latest_version.txt to the storage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: latest_version
           path: latest_version.txt
