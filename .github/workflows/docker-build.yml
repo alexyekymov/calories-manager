@@ -1,0 +1,47 @@
+name: Docker Build
+
+on:
+  workflow_run:
+    workflows: [Run Tests]
+    types:
+      - completed
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      - name: setup Java and Maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Get APP_VERSION
+        id: version
+        run: echo "APP_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
+
+      - name: Save APP_VERSION in a file
+        run: echo ${{ env.APP_VERSION }} > latest_version.txt
+
+      - name: Upload latest_version.txt to the storage
+        uses: actions/upload-artifact@v3
+        with:
+          name: latest_version
+          path: latest_version.txt
+
+      - name: Build & push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }}
+          tags: ${{ env.APP_VERSION }}, latest
+          registry: docker.io
+          multiPlatform: true
+          enableBuildKit: true
+          platform: linux/amd64, linux/arm64
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DDOCKERHUB_TOKEN }}

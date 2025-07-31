@@ -1,0 +1,57 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      - name: setup Java and Gradle
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Get current version
+        id: current
+        run: |
+            echo "NEW_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
+
+      - name: Download latest_version.txt from the storage
+        uses: actions/download-artifact@v3
+        with:
+          name: latest_version
+        continue-on-error: true
+
+      - name: Load APP_VERSION from file
+        run: |
+            if [ -f latest_version.txt ]; then
+              echo "APP_VERSION=$(cat latest_version.txt)" >> $GITHUB_ENV
+            else
+              echo "No previous version found. Skipping version check."
+            fi
+
+      - name: Fail if version did not change
+        run: |
+          echo "Previous version: $APP_VERSION"
+          echo "Current version: $NEW_VERSION"
+          if [ "$APP_VERSION" = "$NEW_VERSION" ]; then
+            echo "❌ Version $NEW_VERSION was already used."
+            echo "🔧 Please bump the version in build.gradle before pushing."
+            exit 1
+          else
+            echo "✅ Version changed, continuing."
+          fi
+
+      - name: run tests
+        run: ./gradlew test
