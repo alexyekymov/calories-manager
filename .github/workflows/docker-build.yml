@@ -42,6 +42,6 @@ jobs:
           registry: docker.io
           multiPlatform: true
           enableBuildKit: true
-          platform: linux/amd64, linux/arm64
+          platform: linux/amd64,linux/arm64
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DDOCKERHUB_TOKEN }}
