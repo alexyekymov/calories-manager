@@ -1,1 +1,1 @@
-[![Docker Build](https://github.com/alexyekymov/calories-manager/actions/workflows/docker-build.yml/badge.svg?event=workflow_run)](https://github.com/alexyekymov/calories-manager/actions/workflows/docker-build.yml)
+[![Docker Build](https://github.com/alexyekymov/calories-manager/actions/workflows/docker-build.yml/badge.svg)](https://github.com/alexyekymov/calories-manager/actions/workflows/docker-build.yml)
