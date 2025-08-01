@@ -38,7 +38,7 @@ jobs:
             echo "❌ Tag '$TAG' already exists in Docker Hub for image '$IMAGE'!"
             echo "🚫 The build stage will be skipped to avoid overwriting an existing image."
             echo "🔧 Please bump the version in build.gradle before pushing."
-            exit 0
+            exit 78
           else
             echo "✅ Tag '$TAG' does not exist, proceeding with build."
           fi
