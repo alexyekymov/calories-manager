@@ -2,7 +2,10 @@ spring:
   application:
     name: calories-manager
 
+  config:
+    import: optional:file:.env[.properties]
+
   datasource:
-    url: jdbc:${DB_DRIVER}://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+    url: jdbc:${DB_DRIVER:postgresql}://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:caloman}
     username: ${DB_USERNAME:user}
     password: ${DB_PASSWORD:password}
