@@ -6,6 +6,6 @@ spring:
     import: optional:file:.env[.properties]
 
   datasource:
-    url: jdbc:${DB_DRIVER:postgresql}://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:caloman}
+    url: jdbc:${DB_DRIVER:postgresql}://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:caloman}
     username: ${DB_USERNAME:user}
     password: ${DB_PASSWORD:password}
