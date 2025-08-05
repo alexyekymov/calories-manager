@@ -24,9 +24,9 @@ services:
     volumes:
       - psql-caloman-data:/var/lib/postgresql/data
 
-  volumes:
-    psql-caloman-data:
+volumes:
+  psql-caloman-data:
 
-  networks:
-    caloman-net:
-      driver: bridge
+networks:
+  caloman-net:
+    driver: bridge
