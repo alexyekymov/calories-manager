@@ -64,4 +64,14 @@ public class MealController {
                         .build(created.getId()))
                 .body(payloadMapper.toDTO(created));
     }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> update(@PathVariable int id,
+                                       @RequestBody MealPayload mealReq) {
+        Meal meal = payloadMapper.toEntity(mealReq);
+
+        service.update(meal, id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

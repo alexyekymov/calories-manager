@@ -5,11 +5,12 @@ import dev.overlax.caloriesmanager.model.User;
 import dev.overlax.caloriesmanager.repository.MealRepository;
 import dev.overlax.caloriesmanager.util.DateTimeUtils;
 import dev.overlax.caloriesmanager.util.UserUtils;
+import dev.overlax.caloriesmanager.util.ValidationUtil;
 import dev.overlax.caloriesmanager.web.payload.MealPayload;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MealService {
 
     private final MealRepository repository;
@@ -46,5 +48,16 @@ public class MealService {
         User user = userService.getById(UserUtils.TEST_USER_ID);
         meal.setUser(user);
         return repository.save(meal);
+    }
+
+    @Transactional
+    public void update(Meal newMeal, int id) {
+        ValidationUtil.assureIdConsistent(newMeal, id);
+
+        Meal mealToUpdate = getWithId(newMeal.getId());
+
+        mealToUpdate.setDateTime(newMeal.getDateTime());
+        mealToUpdate.setDescription(newMeal.getDescription());
+        mealToUpdate.setCalories(newMeal.getCalories());
     }
 }
