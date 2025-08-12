@@ -5,7 +5,7 @@ import dev.overlax.caloriesmanager.model.User;
 import dev.overlax.caloriesmanager.repository.MealRepository;
 import dev.overlax.caloriesmanager.util.DateTimeUtils;
 import dev.overlax.caloriesmanager.util.UserUtils;
-import dev.overlax.caloriesmanager.web.payload.MealResponse;
+import dev.overlax.caloriesmanager.web.payload.MealPayload;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +32,8 @@ public class MealService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Meal with {} not found", id)));
     }
 
-    public List<MealResponse> getBetween(LocalDate startDate, LocalTime startTime,
-                                         LocalDate endDate, LocalTime endTime) {
+    public List<MealPayload> getBetween(LocalDate startDate, LocalTime startTime,
+                                        LocalDate endDate, LocalTime endTime) {
 
         List<Meal> mealsByDateOrAll = repository.findAllByDateTimeGreaterThanEqualAndDateTimeLessThanOrderByDateTime(
                 DateTimeUtils.atStartOfDayOrMinDate(startDate), DateTimeUtils.atStartOfNextDayOrMaxDate(endDate));

@@ -2,8 +2,8 @@ package dev.overlax.caloriesmanager.service;
 
 import dev.overlax.caloriesmanager.model.Meal;
 import dev.overlax.caloriesmanager.util.DateTimeUtils;
-import dev.overlax.caloriesmanager.web.mapper.MealResponseMapper;
-import dev.overlax.caloriesmanager.web.payload.MealResponse;
+import dev.overlax.caloriesmanager.web.mapper.MealPayloadMapper;
+import dev.overlax.caloriesmanager.web.payload.MealPayload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MealProcessor {
 
-    private final MealResponseMapper mapper;
+    private final MealPayloadMapper mapper;
 
-    public List<MealResponse> getFilteredResponse(List<Meal> meals, int caloriesLimit,
-                                                  LocalTime startTime, LocalTime endTime) {
+    public List<MealPayload> getFilteredResponse(List<Meal> meals, int caloriesLimit,
+                                                 LocalTime startTime, LocalTime endTime) {
         Map<LocalDate, Integer> caloriesSumByDade = meals.stream()
                 .collect(
                         Collectors.toMap(Meal::getDate, Meal::getCalories, Integer::sum)

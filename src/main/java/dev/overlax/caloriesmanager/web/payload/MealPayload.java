@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import java.time.LocalDateTime;
 
-public record MealResponse(
+public record MealPayload(
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @JsonView(Views.Public.class)
         Integer id,
