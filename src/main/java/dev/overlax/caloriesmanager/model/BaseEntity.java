@@ -1,5 +1,7 @@
 package dev.overlax.caloriesmanager.model;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
@@ -13,6 +15,7 @@ import lombok.*;
 public abstract class BaseEntity implements HasId {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
 
     @Override
