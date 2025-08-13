@@ -3,6 +3,7 @@ package dev.overlax.caloriesmanager.web;
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.overlax.caloriesmanager.model.Meal;
 import dev.overlax.caloriesmanager.service.MealService;
+import dev.overlax.caloriesmanager.util.UserUtils;
 import dev.overlax.caloriesmanager.web.mapper.MealPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.MealPayload;
 import dev.overlax.caloriesmanager.web.payload.Views;
@@ -38,7 +39,7 @@ public class MealController {
     @GetMapping("/{id}")
     @JsonView(Views.Public.class) // to show only fields without calculations of excess
     public ResponseEntity<MealPayload> get(@PathVariable int id) {
-        MealPayload resp = payloadMapper.toDTO(service.getWithId(id));
+        MealPayload resp = payloadMapper.toDTO(service.get(id, UserUtils.TEST_USER_ID));
         return ResponseEntity.ok(resp);
     }
 
@@ -76,7 +77,7 @@ public class MealController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete (@PathVariable int id) {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

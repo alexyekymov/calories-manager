@@ -26,12 +26,12 @@ public class MealService {
     private final UserService userService;
 
     public List<Meal> getAll() {
-        return repository.findAll();
+        return repository.findAllByUserId(UserUtils.TEST_USER_ID);
     }
 
-    public Meal getWithId(int id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Meal with {} not found", id)));
+    public Meal get(int mealId, int userId) {
+        return repository.findByIdAndUserId(mealId, userId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Meal with %d not found", mealId)));
     }
 
     public List<MealPayload> getBetween(LocalDate startDate, LocalTime startTime,
