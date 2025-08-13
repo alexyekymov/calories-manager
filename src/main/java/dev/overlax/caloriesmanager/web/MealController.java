@@ -53,7 +53,7 @@ public class MealController {
         return ResponseEntity.ok(mealsBetween);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(Views.Public.class) // to show only fields without calculations of excess
     public ResponseEntity<MealPayload> createWithLocation(@RequestBody MealPayload mealReq, UriComponentsBuilder uriBuilder) {
         Meal meal = payloadMapper.toEntity(mealReq);
@@ -72,6 +72,12 @@ public class MealController {
 
         service.update(meal, id);
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete (@PathVariable int id) {
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

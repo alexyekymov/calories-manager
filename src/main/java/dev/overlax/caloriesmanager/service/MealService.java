@@ -54,10 +54,20 @@ public class MealService {
     public void update(Meal newMeal, int id) {
         ValidationUtil.assureIdConsistent(newMeal, id);
 
-        Meal mealToUpdate = getWithId(newMeal.getId());
+        Meal mealToUpdate = repository.findByIdAndUserId(id, UserUtils.TEST_USER_ID)
+                .orElseThrow(() -> new RuntimeException("The meal with id=" + id +
+                        " doesn't belong to the user with id=" + UserUtils.TEST_USER_ID));
 
         mealToUpdate.setDateTime(newMeal.getDateTime());
         mealToUpdate.setDescription(newMeal.getDescription());
         mealToUpdate.setCalories(newMeal.getCalories());
+    }
+
+    @Transactional
+    public void delete(int id) {
+        if (repository.deleteByIdAndUserId(id, UserUtils.TEST_USER_ID) < 1) {
+            throw new RuntimeException("The meal with id=" + id +
+                    " doesn't belong to the user with id=" + UserUtils.TEST_USER_ID);
+        }
     }
 }
