@@ -15,6 +15,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Get APP_VERSION
+        id: version
+        run: echo "APP_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
+
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.9.1
         with:
@@ -35,6 +39,7 @@ jobs:
             cd /home/${{ secrets.SSH_USER }}/caloman
 
             cat <<EOF > .env
+            APP_VERSION=${{ env.APP_VERSION }}
             DB_HOST=${{ secrets.DB_HOST }}
             DB_PORT=${{ secrets.DB_PORT }}
             DB_NAME=${{ secrets.DB_NAME }}
