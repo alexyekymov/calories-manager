@@ -19,7 +19,7 @@ jobs:
 
       - name: Copy docker-compose to server
         run: |
-          rsync -avz -e "ssh -i key.pem -o StrictHostKeyChecking=no" docker-compose.prod.yml \ 
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" docker-compose.prod.yml \ 
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/caloman/docker-compose.yml
 
       - name: Deploy via SSH
