@@ -9,8 +9,8 @@ import java.time.LocalTime;
 
 @UtilityClass
 public class DateTimeUtils {
-    private static final LocalDateTime MIN_DATE = LocalDateTime.of(1, 1, 1, 0, 0);
-    private static final LocalDateTime MAX_DATE = LocalDateTime.of(3000, 1, 1, 0, 0);
+    public static final LocalDateTime MIN_DATE = LocalDateTime.of(1, 1, 1, 0, 0);
+    public static final LocalDateTime MAX_DATE = LocalDateTime.of(3000, 1, 1, 0, 0);
 
     public static LocalDateTime atStartOfDayOrMinDate(LocalDate ld) {
         return ld != null ? ld.atStartOfDay() : MIN_DATE;

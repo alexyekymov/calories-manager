@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,15 +20,25 @@ public class MealProcessor {
 
     private final MealPayloadMapper mapper;
 
-    public List<MealPayload> getFilteredResponse(List<Meal> meals, int caloriesLimit,
-                                                 LocalTime startTime, LocalTime endTime) {
+    public List<MealPayload> getPayloadList(List<Meal> meals, int caloriesLimit) {
+        return filterByPredicate(meals, caloriesLimit, meal -> true);
+    }
+
+    public List<MealPayload> getFilteredPayloadList(List<Meal> meals, int caloriesLimit,
+                                                    LocalTime startTime, LocalTime endTime) {
+        return filterByPredicate(meals, caloriesLimit,
+                meal -> DateTimeUtils.isBetweenHalfOpen(meal.getTime(), startTime, endTime));
+    }
+
+    private List<MealPayload> filterByPredicate(List<Meal> meals, int caloriesLimit,
+                                               Predicate<Meal> filter) {
         Map<LocalDate, Integer> caloriesSumByDade = meals.stream()
                 .collect(
                         Collectors.toMap(Meal::getDate, Meal::getCalories, Integer::sum)
                 );
 
         return meals.stream()
-                .filter(meal -> DateTimeUtils.isBetweenHalfOpen(meal.getTime(), startTime, endTime))
+                .filter(filter)
                 .map(meal -> mapper.toDTOWithExcess(meal, caloriesSumByDade.get(meal.getDate()) > caloriesLimit))
                 .toList();
     }

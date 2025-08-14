@@ -40,7 +40,7 @@ public class MealService {
         List<Meal> mealsByDateOrAll = repository.findAllByDateTimeGreaterThanEqualAndDateTimeLessThanOrderByDateTime(
                 DateTimeUtils.atStartOfDayOrMinDate(startDate), DateTimeUtils.atStartOfNextDayOrMaxDate(endDate));
 
-        return processor.getFilteredResponse(mealsByDateOrAll, UserUtils.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
+        return processor.getFilteredPayloadList(mealsByDateOrAll, UserUtils.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
     }
 
     @Transactional
