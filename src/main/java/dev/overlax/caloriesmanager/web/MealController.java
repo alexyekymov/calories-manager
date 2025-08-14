@@ -32,8 +32,7 @@ public class MealController {
 
     @GetMapping
     public ResponseEntity<List<MealPayload>> getAll() {
-        List<MealPayload> resp = payloadMapper.toDTOs(service.getAll());
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")

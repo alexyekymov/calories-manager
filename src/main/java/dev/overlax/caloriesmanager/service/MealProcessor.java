@@ -31,7 +31,7 @@ public class MealProcessor {
     }
 
     private List<MealPayload> filterByPredicate(List<Meal> meals, int caloriesLimit,
-                                               Predicate<Meal> filter) {
+                                                Predicate<Meal> filter) {
         Map<LocalDate, Integer> caloriesSumByDade = meals.stream()
                 .collect(
                         Collectors.toMap(Meal::getDate, Meal::getCalories, Integer::sum)

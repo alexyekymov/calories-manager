@@ -25,8 +25,10 @@ public class MealService {
     private final MealProcessor processor;
     private final UserService userService;
 
-    public List<Meal> getAll() {
-        return repository.findAllByUserId(UserUtils.TEST_USER_ID);
+    public List<MealPayload> getAll() {
+        List<Meal> mealsById = repository.findAllByUserId(UserUtils.TEST_USER_ID);
+        return processor.getPayloadList(mealsById, UserUtils.DEFAULT_CALORIES_PER_DAY);
+
     }
 
     public Meal get(int mealId, int userId) {
