@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Setter
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor()
 @Entity
 @Table(name = "users")
 public class User extends NamedEntity implements HasIdAndEmail {
@@ -43,7 +43,8 @@ public class User extends NamedEntity implements HasIdAndEmail {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Meal> meals;
 
-    public User(Integer id, String name, String email, String password, boolean enabled, Date registered, Integer caloriesPerDay, Set<Role> roles) {
+    public User(Integer id, String name, String email, String password, boolean enabled, Date registered,
+                Integer caloriesPerDay, Set<Role> roles) {
         super(id, name);
         this.email = email;
         this.password = password;
@@ -51,6 +52,10 @@ public class User extends NamedEntity implements HasIdAndEmail {
         this.registered = registered;
         this.caloriesPerDay = caloriesPerDay;
         this.roles = roles;
+    }
+
+    public User(Integer id, String name, String email, String password, int caloriesPerDay) {
+        this(id, name, email, password, true, new Date(), caloriesPerDay, Set.of(Role.USER));
     }
 
     // TODO more constructors

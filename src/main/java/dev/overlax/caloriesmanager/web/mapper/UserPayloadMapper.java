@@ -1,0 +1,13 @@
+package dev.overlax.caloriesmanager.web.mapper;
+
+import dev.overlax.caloriesmanager.model.User;
+import dev.overlax.caloriesmanager.web.payload.UserPayload;
+import org.mapstruct.*;
+
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface UserPayloadMapper extends Mappable<User, UserPayload> {
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "password", ignore = true)
+    void updateFromDTO(UserPayload userReq, @MappingTarget User user);
+}
