@@ -30,6 +30,14 @@ public class UserController {
         return ResponseEntity.ok(mapper.toDTO(user));
     }
 
+    @GetMapping("/with-meals")
+    @JsonView(Views.WithChildren.class)
+    public ResponseEntity<UserPayload> getWithMeals() {
+        User user = service.getWithMeals(UserUtils.TEST_USER_ID);
+
+        return ResponseEntity.ok( mapper.toDTO(user));
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(Views.Public.class)
     public ResponseEntity<UserPayload> register(@RequestBody UserPayload userReq, UriComponentsBuilder uriBuilder) {
@@ -50,4 +58,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping
+    public ResponseEntity<Void> delete() {
+        service.delete(UserUtils.TEST_USER_ID);
+        return ResponseEntity.noContent().build();
+    }
 }

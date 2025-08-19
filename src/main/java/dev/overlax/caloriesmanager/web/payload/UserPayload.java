@@ -2,6 +2,9 @@ package dev.overlax.caloriesmanager.web.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import dev.overlax.caloriesmanager.model.Meal;
+
+import java.util.List;
 
 public record UserPayload(
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -17,6 +20,9 @@ public record UserPayload(
         String password,
 
         @JsonView(Views.Public.class)
-        Integer caloriesPerDay
+        Integer caloriesPerDay,
+
+        @JsonView(Views.WithChildren.class)
+        List<MealPayload> meals
 ) {
 }

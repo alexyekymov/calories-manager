@@ -36,4 +36,14 @@ public class UserService {
             user.setPassword("{noop}" + userReq.password());
         }
     }
+
+    @Transactional
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
+
+    public User getWithMeals(int id) {
+        return repository.findByIdWithMeals(id)
+                .orElseThrow(() -> new RuntimeException("User with id=" + id + " not found"));
+    }
 }
