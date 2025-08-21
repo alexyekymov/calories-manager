@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.meals WHERE u.id = :id")
     Optional<User> findByIdWithMeals(int id);
+
+    Optional<User> findByEmailIgnoreCase(String email);
 }
