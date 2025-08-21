@@ -1,5 +1,6 @@
 package dev.overlax.caloriesmanager.service;
 
+import dev.overlax.caloriesmanager.config.SecurityConfig;
 import dev.overlax.caloriesmanager.model.User;
 import dev.overlax.caloriesmanager.repository.UserRepository;
 import dev.overlax.caloriesmanager.web.mapper.UserPayloadMapper;
@@ -21,7 +22,7 @@ public class UserService {
 
     @Transactional
     public User prepareAndSave(User user) {
-        user.setPassword("{noop}" + user.getPassword());
+        user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
         user.setEmail(user.getEmail().toLowerCase());
         return repository.save(user);
     }
