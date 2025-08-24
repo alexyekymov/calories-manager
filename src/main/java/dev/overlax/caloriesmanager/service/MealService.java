@@ -4,7 +4,7 @@ import dev.overlax.caloriesmanager.model.Meal;
 import dev.overlax.caloriesmanager.model.User;
 import dev.overlax.caloriesmanager.repository.MealRepository;
 import dev.overlax.caloriesmanager.util.DateTimeUtils;
-import dev.overlax.caloriesmanager.util.ValidationUtil;
+import dev.overlax.caloriesmanager.web.mapper.MealPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.MealPayload;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,7 @@ public class MealService {
     private final MealRepository repository;
     private final MealProcessor processor;
     private final UserService userService;
+    private final MealPayloadMapper mapper;
 
     public List<MealPayload> getAll(int userId, int caloriesPerDay) {
         List<Meal> mealsById = repository.findAllByUserId(userId);
@@ -55,16 +56,13 @@ public class MealService {
     }
 
     @Transactional
-    public void update(Meal newMeal, int id, int userId) {
-        ValidationUtil.assureIdConsistent(newMeal, id);
+    public void update(MealPayload mealReq, int id, int userId) {
 
         Meal mealToUpdate = repository.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new RuntimeException("The meal with id=" + id +
                         " doesn't belong to the user with id=" + userId));
 
-        mealToUpdate.setDateTime(newMeal.getDateTime());
-        mealToUpdate.setDescription(newMeal.getDescription());
-        mealToUpdate.setCalories(newMeal.getCalories());
+        mapper.updateFromDTO(mealReq, mealToUpdate);
     }
 
     @Transactional

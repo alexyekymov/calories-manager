@@ -51,7 +51,7 @@ public class MealController {
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime) {
 
-        List<MealPayload> mealsBetween =service.getBetween(authUser.id(), authUser.getUser().getCaloriesPerDay(),startDate, startTime, endDate, endTime);
+        List<MealPayload> mealsBetween = service.getBetween(authUser.id(), authUser.getUser().getCaloriesPerDay(), startDate, startTime, endDate, endTime);
         return ResponseEntity.ok(mealsBetween);
     }
 
@@ -75,9 +75,8 @@ public class MealController {
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable int id,
             @RequestBody MealPayload mealReq) {
-        Meal meal = payloadMapper.toEntity(mealReq);
 
-        service.update(meal, id, authUser.id());
+        service.update(mealReq, id, authUser.id());
 
         return ResponseEntity.noContent().build();
     }
