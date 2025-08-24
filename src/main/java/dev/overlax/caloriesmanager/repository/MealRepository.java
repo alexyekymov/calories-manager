@@ -11,7 +11,10 @@ import java.util.Optional;
 @Repository
 public interface MealRepository extends JpaRepository<Meal, Integer> {
 
-    List<Meal> findAllByDateTimeGreaterThanEqualAndDateTimeLessThanOrderByDateTime(LocalDateTime dateTimeAfter, LocalDateTime dateTimeBefore);
+    List<Meal> findAllByUserIdAndDateTimeGreaterThanEqualAndDateTimeLessThanOrderByDateTime(
+            int userId,
+            LocalDateTime dateTimeAfter,
+            LocalDateTime dateTimeBefore);
 
     Optional<Meal> findByIdAndUserId(int mealId, int userId);
 

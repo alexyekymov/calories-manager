@@ -1,9 +1,9 @@
 package dev.overlax.caloriesmanager.web;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import dev.overlax.caloriesmanager.model.AuthUser;
 import dev.overlax.caloriesmanager.model.Meal;
 import dev.overlax.caloriesmanager.service.MealService;
-import dev.overlax.caloriesmanager.util.UserUtils;
 import dev.overlax.caloriesmanager.web.mapper.MealPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.MealPayload;
 import dev.overlax.caloriesmanager.web.payload.Views;
@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -31,33 +32,37 @@ public class MealController {
     private final MealPayloadMapper payloadMapper;
 
     @GetMapping
-    public ResponseEntity<List<MealPayload>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<MealPayload>> getAll(@AuthenticationPrincipal AuthUser authUser) {
+        return ResponseEntity.ok(service.getAll(authUser.id(), authUser.getUser().getCaloriesPerDay()));
     }
 
     @GetMapping("/{id}")
     @JsonView(Views.Public.class) // to show only fields without calculations of excess
-    public ResponseEntity<MealPayload> get(@PathVariable int id) {
-        MealPayload resp = payloadMapper.toDTO(service.get(id, UserUtils.TEST_USER_ID));
+    public ResponseEntity<MealPayload> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
+        MealPayload resp = payloadMapper.toDTO(service.get(id, authUser.id()));
         return ResponseEntity.ok(resp);
     }
 
     @GetMapping("/filter")
     public ResponseEntity<List<MealPayload>> getBetween(
+            @AuthenticationPrincipal AuthUser authUser,
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime) {
 
-        List<MealPayload> mealsBetween = service.getBetween(startDate, startTime, endDate, endTime);
+        List<MealPayload> mealsBetween =service.getBetween(authUser.id(), authUser.getUser().getCaloriesPerDay(),startDate, startTime, endDate, endTime);
         return ResponseEntity.ok(mealsBetween);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(Views.Public.class) // to show only fields without calculations of excess
-    public ResponseEntity<MealPayload> createWithLocation(@RequestBody MealPayload mealReq, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<MealPayload> createWithLocation(
+            @AuthenticationPrincipal AuthUser authUser,
+            @RequestBody MealPayload mealReq,
+            UriComponentsBuilder uriBuilder) {
         Meal meal = payloadMapper.toEntity(mealReq);
-        Meal created = service.save(meal);
+        Meal created = service.save(meal, authUser.id());
         return ResponseEntity
                 .created(uriBuilder
                         .path(REST_URI + "/{id}")
@@ -66,18 +71,20 @@ public class MealController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> update(@PathVariable int id,
-                                       @RequestBody MealPayload mealReq) {
+    public ResponseEntity<Void> update(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable int id,
+            @RequestBody MealPayload mealReq) {
         Meal meal = payloadMapper.toEntity(mealReq);
 
-        service.update(meal, id);
+        service.update(meal, id, authUser.id());
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
-        service.delete(id);
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
+        service.delete(id, authUser.id());
         return ResponseEntity.noContent().build();
     }
 }
