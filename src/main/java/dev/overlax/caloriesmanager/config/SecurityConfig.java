@@ -37,8 +37,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/**")
                 .authorizeHttpRequests(auths ->
-                        auths.requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
-                             .requestMatchers("/api/**").authenticated())
+                        auths
+                                .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
+                                .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
+                                .requestMatchers("/api/**").authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(sessionManager ->
                         sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
