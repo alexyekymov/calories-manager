@@ -48,7 +48,8 @@ public class UserController {
         return ResponseEntity
                 .created(uriBuilder
                         .path(REST_URI)
-                        .build(created.getId()))
+                        .build()
+                        .toUri())
                 .body(mapper.toDTO(created));
     }
 
