@@ -53,7 +53,6 @@ public class UserController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @JsonView(Views.Public.class)
     public ResponseEntity<Void> update(@AuthenticationPrincipal AuthUser authUser, @RequestBody UserPayload userReq) {
         service.update(userReq, authUser.id());
 
