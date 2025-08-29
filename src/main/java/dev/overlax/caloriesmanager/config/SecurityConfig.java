@@ -3,8 +3,9 @@ package dev.overlax.caloriesmanager.config;
 import dev.overlax.caloriesmanager.model.AuthUser;
 import dev.overlax.caloriesmanager.model.Role;
 import dev.overlax.caloriesmanager.model.User;
-import dev.overlax.caloriesmanager.repository.UserRepository;
+import dev.overlax.caloriesmanager.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,15 +19,13 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.Optional;
-
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -52,9 +51,8 @@ public class SecurityConfig {
     @Bean
     UserDetailsService userDetailsService() {
         return email -> {
-            Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
-            return new AuthUser(optionalUser.orElseThrow(
-                    () -> new RuntimeException(String.format("User with '%s' was not found", email))));
+            User user = userService.findByEmailIgnoreCase(email);
+            return new AuthUser(user);
         };
     }
 }
