@@ -51,8 +51,8 @@ public class UserService {
 
     @Transactional
     @Caching(evict = {
-            @CacheEvict(cacheNames = "users.byId", key = "#result.id"),
-            @CacheEvict(cacheNames = "users.withMeals", key = "#result.id"),
+            @CacheEvict(cacheNames = "users.byId", key = "#userId"),
+            @CacheEvict(cacheNames = "users.withMeals", key = "#userId"),
             @CacheEvict(cacheNames = "users.byEmail", allEntries = true)
     })
     public void update(UserPayload userReq, int userId) {
