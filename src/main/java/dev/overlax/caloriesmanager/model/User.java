@@ -2,7 +2,6 @@ package dev.overlax.caloriesmanager.model;
 
 import dev.overlax.caloriesmanager.util.UserUtils;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -57,12 +56,6 @@ public class User extends NamedEntity implements HasIdAndEmail {
     public User(Integer id, String name, String email, String password, int caloriesPerDay) {
         this(id, name, email, password, true, new Date(), caloriesPerDay, Set.of(Role.USER));
     }
-
-    // TODO more constructors
-
-    // TODO setRole?
-
-    // TODO hasROle?
 
     @Override
     public String toString() {
