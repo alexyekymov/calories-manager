@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = AdminController.REST_URI, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -21,6 +23,13 @@ public class AdminController {
 
     private final UserService service;
     private final UserPayloadMapper mapper;
+
+    @GetMapping
+    @JsonView(Views.Public.class)
+    public ResponseEntity<List<UserPayload>> getAll() {
+        List<UserPayload> dtoList = mapper.toDTOs(service.getAll());
+        return ResponseEntity.ok(dtoList);
+    }
 
     @GetMapping("/{id}")
     @JsonView(Views.Public.class)
