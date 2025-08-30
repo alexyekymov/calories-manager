@@ -13,3 +13,10 @@ spring:
   cache:
     caffeine:
       spec: "maximumSize=1000,expireAfterAccess=60m"
+
+  jpa:
+    properties:
+      # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
+      hibernate:
+        default_batch_fetch_size: 20
+        jdbc.batch_size: 20
