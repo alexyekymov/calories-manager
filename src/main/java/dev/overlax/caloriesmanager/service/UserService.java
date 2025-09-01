@@ -66,7 +66,7 @@ public class UserService {
             @CacheEvict(cacheNames = "users.all", allEntries = true)
     })
     public void update(UserPayload userReq, int userId) {
-        User user = this.getById(userId); // rewrite during refactoring
+        User user = repository.getReferenceById(userId);
 
         mapper.updateFromDTO(userReq, user);
 
