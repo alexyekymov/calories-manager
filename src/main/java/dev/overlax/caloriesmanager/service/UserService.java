@@ -77,8 +77,8 @@ public class UserService {
 
     @Transactional
     @Caching(evict = {
-            @CacheEvict(cacheNames = "users.byId", key = "#result.id"),
-            @CacheEvict(cacheNames = "users.withMeals", key = "#result.id"),
+            @CacheEvict(cacheNames = "users.byId", key = "#id"),
+            @CacheEvict(cacheNames = "users.withMeals", key = "#id"),
             @CacheEvict(cacheNames = "users.byEmail", allEntries = true),
             @CacheEvict(cacheNames = "users.all", allEntries = true)
     })
