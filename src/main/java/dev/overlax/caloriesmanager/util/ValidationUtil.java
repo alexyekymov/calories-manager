@@ -4,6 +4,7 @@ import dev.overlax.caloriesmanager.model.HasId;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
+@Deprecated(forRemoval = true)
 public class ValidationUtil {
 
     public static void assureIdConsistent(HasId bean, int id) {
