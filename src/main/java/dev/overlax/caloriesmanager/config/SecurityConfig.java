@@ -5,7 +5,6 @@ import dev.overlax.caloriesmanager.model.Role;
 import dev.overlax.caloriesmanager.model.User;
 import dev.overlax.caloriesmanager.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
