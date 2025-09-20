@@ -7,6 +7,7 @@ import dev.overlax.caloriesmanager.service.MealService;
 import dev.overlax.caloriesmanager.web.mapper.MealPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.MealPayload;
 import dev.overlax.caloriesmanager.web.payload.Views;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,7 +52,8 @@ public class MealController {
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime) {
 
-        List<MealPayload> mealsBetween = service.getBetween(authUser.id(), authUser.getUser().getCaloriesPerDay(), startDate, startTime, endDate, endTime);
+        List<MealPayload> mealsBetween = service.getBetween(authUser.id(), authUser.getUser().getCaloriesPerDay(),
+                startDate, startTime, endDate, endTime);
         return ResponseEntity.ok(mealsBetween);
     }
 
@@ -59,7 +61,7 @@ public class MealController {
     @JsonView(Views.Public.class) // to show only fields without calculations of excess
     public ResponseEntity<MealPayload> createWithLocation(
             @AuthenticationPrincipal AuthUser authUser,
-            @RequestBody MealPayload mealReq,
+            @RequestBody @Valid MealPayload mealReq,
             UriComponentsBuilder uriBuilder) {
         Meal meal = payloadMapper.toEntity(mealReq);
         Meal created = service.save(meal, authUser.id());
@@ -74,7 +76,7 @@ public class MealController {
     public ResponseEntity<Void> update(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable int id,
-            @RequestBody MealPayload mealReq) {
+            @RequestBody @Valid MealPayload mealReq) {
 
         service.update(mealReq, id, authUser.id());
 

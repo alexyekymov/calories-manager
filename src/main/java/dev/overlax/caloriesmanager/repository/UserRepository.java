@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByIdWithMeals(int id);
 
     Optional<User> findByEmailIgnoreCase(String email);
+
+    Integer deleteUserById(int id);
 }

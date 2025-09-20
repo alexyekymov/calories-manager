@@ -6,6 +6,7 @@ import dev.overlax.caloriesmanager.service.UserService;
 import dev.overlax.caloriesmanager.web.mapper.UserPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.UserPayload;
 import dev.overlax.caloriesmanager.web.payload.Views;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class AdminController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(Views.Public.class)
-    public ResponseEntity<UserPayload> createWithLocation(@RequestBody UserPayload userReq,
+    public ResponseEntity<UserPayload> createWithLocation(@RequestBody @Valid UserPayload userReq,
                                                           UriComponentsBuilder uriBuilder) {
         User user = mapper.toEntity(userReq);
         User created = service.prepareAndSave(user);
@@ -61,7 +62,7 @@ public class AdminController {
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> update(@PathVariable int id,
-                                       @RequestBody UserPayload userReq) {
+                                       @RequestBody @Valid UserPayload userReq) {
         service.update(userReq, id);
         return ResponseEntity.noContent().build();
     }

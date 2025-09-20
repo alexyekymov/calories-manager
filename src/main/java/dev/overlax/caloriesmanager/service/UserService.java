@@ -3,6 +3,7 @@ package dev.overlax.caloriesmanager.service;
 import dev.overlax.caloriesmanager.config.SecurityConfig;
 import dev.overlax.caloriesmanager.model.User;
 import dev.overlax.caloriesmanager.repository.UserRepository;
+import dev.overlax.caloriesmanager.util.exception.NotFoundException;
 import dev.overlax.caloriesmanager.web.mapper.UserPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.UserPayload;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,6 +24,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository repository;
     private final UserPayloadMapper mapper;
+    private final MessageService messageService;
 
     @Cacheable("users.all")
     public List<User> getAll() {
@@ -30,19 +33,28 @@ public class UserService {
 
     @Cacheable("users.byId")
     public User getById(int id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("User with id=" + id + " not found"));
+        return repository.findById(id).orElseThrow(() -> {
+            String msg = messageService.getMessage("error.user.id.not-found", id);
+            return new NotFoundException(msg);
+        });
     }
 
     @Cacheable("users.byEmail")
     public User findByEmailIgnoreCase(String email) {
         return repository.findByEmailIgnoreCase(email).orElseThrow(
-                () -> new RuntimeException(String.format("User with '%s' was not found", email)));
+                () -> {
+                    String msg = messageService.getMessage("error.user.email.not-found", email);
+                    return new NotFoundException(msg);
+                });
     }
 
     @Cacheable("users.withMeals")
     public User getWithMeals(int id) {
         return repository.findByIdWithMeals(id)
-                .orElseThrow(() -> new RuntimeException("User with id=" + id + " not found"));
+                .orElseThrow(() -> {
+                    String msg = messageService.getMessage("error.user.id.not-found", id);
+                    return new NotFoundException(msg);
+                });
     }
 
     @Transactional
@@ -66,7 +78,11 @@ public class UserService {
             @CacheEvict(cacheNames = "users.all", allEntries = true)
     })
     public void update(UserPayload userReq, int userId) {
-        User user = repository.getReferenceById(userId);
+        User user = Optional.of(repository.getReferenceById(userId))
+                .orElseThrow(() -> {
+                    String msg = messageService.getMessage("error.user.not-found", userId);
+                    return new NotFoundException(msg);
+                });
 
         mapper.updateFromDTO(userReq, user);
 
@@ -83,6 +99,9 @@ public class UserService {
             @CacheEvict(cacheNames = "users.all", allEntries = true)
     })
     public void delete(int id) {
-        repository.deleteById(id);
+        if (repository.deleteUserById(id) == 0) {
+            String msg = messageService.getMessage("error.user.id.not-found", id);
+            throw new NotFoundException(msg);
+        }
     }
 }

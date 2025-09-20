@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import dev.overlax.caloriesmanager.model.AuthUser;
 import dev.overlax.caloriesmanager.model.User;
 import dev.overlax.caloriesmanager.service.UserService;
-import dev.overlax.caloriesmanager.util.UserUtils;
 import dev.overlax.caloriesmanager.web.mapper.UserPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.UserPayload;
 import dev.overlax.caloriesmanager.web.payload.Views;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +42,8 @@ public class UserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(Views.Public.class)
-    public ResponseEntity<UserPayload> register(@RequestBody UserPayload userReq, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<UserPayload> register(@RequestBody @Valid UserPayload userReq,
+                                                UriComponentsBuilder uriBuilder) {
         User user = mapper.toEntity(userReq);
         User created = service.prepareAndSave(user);
         return ResponseEntity
@@ -54,7 +55,8 @@ public class UserController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> update(@AuthenticationPrincipal AuthUser authUser, @RequestBody UserPayload userReq) {
+    public ResponseEntity<Void> update(@AuthenticationPrincipal AuthUser authUser,
+                                       @RequestBody @Valid UserPayload userReq) {
         service.update(userReq, authUser.id());
 
         return ResponseEntity.noContent().build();
