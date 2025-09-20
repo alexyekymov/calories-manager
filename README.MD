@@ -3,6 +3,6 @@
 ## Roadmap:
 - [x] Basic auth security
 - [x] Caching
-- [ ] Exception handling
+- [x] Exception handling
 - [ ] Tests
 - [ ] JWT-based Security
