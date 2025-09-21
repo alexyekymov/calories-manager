@@ -4,5 +4,6 @@
 - [x] Basic auth security
 - [x] Caching
 - [x] Exception handling
+- [ ] Logging
 - [ ] Tests
 - [ ] JWT-based Security
