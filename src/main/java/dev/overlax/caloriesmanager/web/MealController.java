@@ -33,6 +33,7 @@ public class MealController {
     private final MealPayloadMapper payloadMapper;
 
     @GetMapping
+    @CrossOrigin("localhost:5173")
     public ResponseEntity<List<MealPayload>> getAll(@AuthenticationPrincipal AuthUser authUser) {
         return ResponseEntity.ok(service.getAll(authUser.id(), authUser.getUser().getCaloriesPerDay()));
     }
