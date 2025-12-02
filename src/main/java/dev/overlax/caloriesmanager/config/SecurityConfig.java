@@ -33,7 +33,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher("/api/**")
+        http
+                .securityMatcher("/api/**")
                 .authorizeHttpRequests(auths ->
                         auths
                                 .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
@@ -42,7 +43,8 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(sessionManager ->
                         sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults());
 
         return http.build();
     }
