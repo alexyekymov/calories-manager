@@ -2,12 +2,15 @@ package dev.overlax.caloriesmanager.web.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import dev.overlax.caloriesmanager.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public record UserPayload(
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -29,6 +32,17 @@ public record UserPayload(
         @Min(value = 750)
         @Max(value = 10000)
         Integer caloriesPerDay,
+
+        @JsonView(Views.Private.class)
+        Boolean enabled,
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @JsonView(Views.Private.class)
+        Date registered,
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @JsonView(Views.Private.class)
+        Set<Role> roles,
 
         @JsonView(Views.WithChildren.class)
         List<MealPayload> meals

@@ -17,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping(value = UserController.REST_URI, produces = MediaType.APPLICATION_JSON_VALUE)
-
 @RequiredArgsConstructor
 public class UserController {
     public static final String REST_URI = "/api/profile";

@@ -26,14 +26,14 @@ public class AdminController {
     private final UserPayloadMapper mapper;
 
     @GetMapping
-    @JsonView(Views.Public.class)
-    public ResponseEntity<List<UserPayload>> getAll() {
+    @JsonView(Views.Private.class)
+    public ResponseEntity<List<UserPayload>> getAll() throws InterruptedException {
         List<UserPayload> dtoList = mapper.toDTOs(service.getAll());
         return ResponseEntity.ok(dtoList);
     }
 
     @GetMapping("/{id}")
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Private.class)
     public ResponseEntity<UserPayload> get(@PathVariable int id) {
         User user = service.getById(id);
         return ResponseEntity.ok(mapper.toDTO(user));
@@ -47,7 +47,7 @@ public class AdminController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Private.class)
     public ResponseEntity<UserPayload> createWithLocation(@RequestBody @Valid UserPayload userReq,
                                                           UriComponentsBuilder uriBuilder) {
         User user = mapper.toEntity(userReq);
