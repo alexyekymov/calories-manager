@@ -7,6 +7,7 @@ import dev.overlax.caloriesmanager.service.MealService;
 import dev.overlax.caloriesmanager.web.mapper.MealPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.MealPayload;
 import dev.overlax.caloriesmanager.web.payload.Views;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,10 +49,10 @@ public class MealController {
     @GetMapping("/filter")
     public ResponseEntity<List<MealPayload>> getBetween(
             @AuthenticationPrincipal AuthUser authUser,
-            @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
-            @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime) {
+            @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @Schema(type = "DateTime") LocalDate startDate,
+            @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) @Schema(type = "LocalTime") LocalTime startTime,
+            @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @Schema(type = "DateTime") LocalDate endDate,
+            @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) @Schema(type = "LocalTime") LocalTime endTime) {
 
         List<MealPayload> mealsBetween = service.getBetween(authUser.id(), authUser.getUser().getCaloriesPerDay(),
                 startDate, startTime, endDate, endTime);

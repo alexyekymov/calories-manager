@@ -3,6 +3,7 @@ package dev.overlax.caloriesmanager.web.payload;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.overlax.caloriesmanager.model.Role;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -12,9 +13,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+@Schema(hidden = true)
 public record UserPayload(
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @JsonView(Views.Public.class)
+        @Schema(accessMode = Schema.AccessMode.READ_ONLY)
         Integer id,
 
         @Size(min = 2, max = 64)

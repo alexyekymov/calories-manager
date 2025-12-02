@@ -20,7 +20,9 @@ spring:
       hibernate:
         default_batch_fetch_size: 20
         jdbc.batch_size: 20
+#        format_sql: true
+#    show-sql: true
 
-
-        format_sql: true
-    show-sql: true
+springdoc.swagger-ui:
+  path: /
+  defaultModelsExpandDepth: 0
