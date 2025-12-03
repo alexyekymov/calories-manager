@@ -30,3 +30,5 @@ springdoc.swagger-ui:
 
 frontend:
   url: "http://calories-manager.overlax.pp.ua"
+logging:
+  level.root: debug
