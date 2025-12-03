@@ -27,8 +27,5 @@ springdoc.swagger-ui:
   path: /
   defaultModelsExpandDepth: 0
 
-
 frontend:
   url: "https://calories-manager.overlax.pp.ua"
-logging:
-  level.root: debug
