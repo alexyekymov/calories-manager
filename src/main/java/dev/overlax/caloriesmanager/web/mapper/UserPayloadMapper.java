@@ -5,6 +5,7 @@ import dev.overlax.caloriesmanager.web.payload.UserPayload;
 import org.mapstruct.*;
 
 import java.util.Collections;
+import java.util.Date;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserPayloadMapper extends Mappable<User, UserPayload> {
@@ -16,5 +17,6 @@ public interface UserPayloadMapper extends Mappable<User, UserPayload> {
     @AfterMapping
     default void fixNulls(@MappingTarget User user) {
         if (user.getMeals() == null) user.setMeals(Collections.emptyList());
+        if (user.getRegistered() == null) user.setRegistered(new Date());
     }
 }
