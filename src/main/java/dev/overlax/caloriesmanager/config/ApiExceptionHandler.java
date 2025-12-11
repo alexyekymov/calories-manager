@@ -24,7 +24,10 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.io.FileNotFoundException;
 import java.nio.file.AccessDeniedException;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static dev.overlax.caloriesmanager.util.exception.ErrorType.*;
 
@@ -76,6 +79,20 @@ public class ApiExceptionHandler {
                 .toList();
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> dbErrorHandler(
+            Exception ex,
+            HttpServletRequest req) {
+
+        ErrorType errorType = findErrorType(ex);
+        String msg = extractSQLErrorCauseMessage(ex);
+        String path = req.getRequestURI();
+
+        ApiError error = createApiError(errorType, msg, path, Collections.emptyList());
+
+        return ResponseEntity.status(errorType.status).body(error);
+    }
+
     // TODO: Refactor this method !!!
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> globalHandler(
@@ -85,21 +102,14 @@ public class ApiExceptionHandler {
         /// asd
         System.out.println(ex.getClass().getSimpleName());
         System.out.println("_____________________");
-        Arrays.stream(ex.getStackTrace()).forEach(System.out::println);
-
+//        Arrays.stream(ex.getStackTrace()).forEach(System.out::println);
         /// asd
 
         ErrorType errorType = findErrorType(ex);
+        String msg = ex.getLocalizedMessage();
+        String path = req.getRequestURI();
 
-        ApiError error = new ApiError(
-                errorType.getStatus(),
-                errorType.title,
-                ex.getLocalizedMessage(),
-                Instant.now(), // UTC is better
-                req.getRequestURI(),
-                Collections.emptyList());
-
-//        System.out.println(error);
+        ApiError error = createApiError(errorType, msg, path, Collections.emptyList());
 
         return ResponseEntity.status(errorType.status).body(error);
     }
@@ -115,5 +125,20 @@ public class ApiExceptionHandler {
                 .stream()
                 .filter(entry -> entry.getKey().isAssignableFrom(exClass))
                 .findAny().map(Map.Entry::getValue).get(); // TODO refactor
+    }
+
+    private ApiError createApiError(ErrorType errType, String msg, String path, List<ApiSubError> subErrors) {
+
+        return new ApiError(errType.getStatus(),
+                errType.title,
+                msg,
+                Instant.now(), // UTC is better
+                path,
+                subErrors);
+    }
+
+    private String extractSQLErrorCauseMessage(Throwable t) {
+        String raw = t.getMessage();
+        return raw.split("ERROR: ")[1].split("\n")[0];
     }
 }
