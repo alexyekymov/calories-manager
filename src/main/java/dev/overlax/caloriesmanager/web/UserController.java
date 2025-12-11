@@ -2,9 +2,7 @@ package dev.overlax.caloriesmanager.web;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.overlax.caloriesmanager.model.AuthUser;
-import dev.overlax.caloriesmanager.model.User;
 import dev.overlax.caloriesmanager.service.UserService;
-import dev.overlax.caloriesmanager.web.mapper.UserPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.UserPayload;
 import dev.overlax.caloriesmanager.web.payload.Views;
 import jakarta.validation.Valid;
@@ -22,35 +20,32 @@ public class UserController {
     public static final String REST_URI = "/api/profile";
 
     private final UserService service;
-    private final UserPayloadMapper mapper;
 
     @GetMapping
     @JsonView(Views.Public.class)
     public ResponseEntity<UserPayload> get(@AuthenticationPrincipal AuthUser authUser) {
-        User user = service.getById(authUser.id());
-        return ResponseEntity.ok(mapper.toDTO(user));
+        UserPayload user = service.getById(authUser.id());
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/with-meals")
     @JsonView(Views.WithChildren.class)
     public ResponseEntity<UserPayload> getWithMeals(@AuthenticationPrincipal AuthUser authUser) {
-        User user = service.getWithMeals(authUser.id());
-
-        return ResponseEntity.ok(mapper.toDTO(user));
+        UserPayload user = service.getWithMeals(authUser.id());
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(Views.Public.class)
     public ResponseEntity<UserPayload> register(@RequestBody @Valid UserPayload userReq,
                                                 UriComponentsBuilder uriBuilder) {
-        User user = mapper.toEntity(userReq);
-        User created = service.prepareAndSave(user);
+        UserPayload created = service.prepareAndSave(userReq);
         return ResponseEntity
                 .created(uriBuilder
                         .path(REST_URI)
                         .build()
                         .toUri())
-                .body(mapper.toDTO(created));
+                .body(created);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import dev.overlax.caloriesmanager.model.AuthUser;
 import dev.overlax.caloriesmanager.model.Meal;
 import dev.overlax.caloriesmanager.service.MealService;
-import dev.overlax.caloriesmanager.web.mapper.MealPayloadMapper;
 import dev.overlax.caloriesmanager.web.payload.MealPayload;
 import dev.overlax.caloriesmanager.web.payload.Views;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,19 +30,19 @@ public class MealController {
     public static final String REST_URI = "/api/profile/meals";
 
     private final MealService service;
-    private final MealPayloadMapper payloadMapper;
 
     @GetMapping
     @CrossOrigin("http://localhost:5173")
     public ResponseEntity<List<MealPayload>> getAll(@AuthenticationPrincipal AuthUser authUser) {
-        return ResponseEntity.ok(service.getAll(authUser.id(), authUser.getUser().getCaloriesPerDay()));
+        List<MealPayload> all = service.getAll(authUser.id(), authUser.getUser().getCaloriesPerDay());
+        return ResponseEntity.ok(all);
     }
 
     @GetMapping("/{id}")
-    @JsonView(Views.Public.class) // to show only fields without calculations of excess
+    @JsonView(Views.Public.class) // to show only the fields without calculating the excess
     public ResponseEntity<MealPayload> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        MealPayload resp = payloadMapper.toDTO(service.get(id, authUser.id()));
-        return ResponseEntity.ok(resp);
+        MealPayload meal = service.get(id, authUser.id());
+        return ResponseEntity.ok(meal);
     }
 
     @GetMapping("/filter")
@@ -60,18 +59,18 @@ public class MealController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @JsonView(Views.Public.class) // to show only fields without calculations of excess
+    @JsonView(Views.Public.class) // to show only the fields without calculating the excess
     public ResponseEntity<MealPayload> createWithLocation(
             @AuthenticationPrincipal AuthUser authUser,
             @RequestBody @Valid MealPayload mealReq,
             UriComponentsBuilder uriBuilder) {
-        Meal meal = payloadMapper.toEntity(mealReq);
-        Meal created = service.save(meal, authUser.id());
+
+        MealPayload created = service.save(mealReq, authUser.id());
         return ResponseEntity
                 .created(uriBuilder
                         .path(REST_URI + "/{id}")
-                        .build(created.getId()))
-                .body(payloadMapper.toDTO(created));
+                        .build(created.id()))
+                .body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

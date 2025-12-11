@@ -3,7 +3,9 @@ package dev.overlax.caloriesmanager.config;
 import dev.overlax.caloriesmanager.model.AuthUser;
 import dev.overlax.caloriesmanager.model.Role;
 import dev.overlax.caloriesmanager.model.User;
-import dev.overlax.caloriesmanager.service.UserService;
+import dev.overlax.caloriesmanager.repository.UserRepository;
+import dev.overlax.caloriesmanager.service.MessageService;
+import dev.overlax.caloriesmanager.util.exception.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +26,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final UserService userService;
+    private final UserRepository userRepository;
+    private final MessageService messageService;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -53,7 +56,11 @@ public class SecurityConfig {
     @Bean
     UserDetailsService userDetailsService() {
         return email -> {
-            User user = userService.findByEmailIgnoreCase(email);
+            User user = userRepository.findByEmailIgnoreCase(email)
+                    .orElseThrow(() -> {
+                        String msg = messageService.getMessage("error.user.email.not-found", email);
+                        return new NotFoundException(msg);
+                    });
             return new AuthUser(user);
         };
     }

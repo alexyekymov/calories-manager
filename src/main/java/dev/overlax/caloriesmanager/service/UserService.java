@@ -27,30 +27,35 @@ public class UserService {
     private final MessageService messageService;
 
     @Cacheable("users.all")
-    public List<User> getAll() {
-        return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
+    public List<UserPayload> getAll() {
+        List<User> all = repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
+        return mapper.toDTOs(all);
     }
 
     @Cacheable("users.byId")
-    public User getById(int id) {
-        return repository.findById(id).orElseThrow(() -> {
-            String msg = messageService.getMessage("error.user.id.not-found", id);
-            return new NotFoundException(msg);
-        });
+    public UserPayload getById(int id) {
+        return repository.findById(id)
+                .map(mapper::toDTO)
+                .orElseThrow(() -> {
+                    String msg = messageService.getMessage("error.user.id.not-found", id);
+                    return new NotFoundException(msg);
+                });
     }
 
     @Cacheable("users.byEmail")
-    public User findByEmailIgnoreCase(String email) {
-        return repository.findByEmailIgnoreCase(email).orElseThrow(
-                () -> {
+    public UserPayload findByEmailIgnoreCase(String email) {
+        return repository.findByEmailIgnoreCase(email)
+                .map(mapper::toDTO)
+                .orElseThrow(() -> {
                     String msg = messageService.getMessage("error.user.email.not-found", email);
                     return new NotFoundException(msg);
                 });
     }
 
     @Cacheable("users.withMeals")
-    public User getWithMeals(int id) {
+    public UserPayload getWithMeals(int id) {
         return repository.findByIdWithMeals(id)
+                .map(mapper::toDTO)
                 .orElseThrow(() -> {
                     String msg = messageService.getMessage("error.user.id.not-found", id);
                     return new NotFoundException(msg);
@@ -64,10 +69,13 @@ public class UserService {
             @CachePut(cacheNames = "users.withMeals", key = "#result.id")
     })
     @CacheEvict(cacheNames = "users.all", allEntries = true)
-    public User prepareAndSave(User user) {
+    public UserPayload prepareAndSave(UserPayload userReq) {
+        User user = mapper.toEntity(userReq);
         user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
         user.setEmail(user.getEmail().toLowerCase());
-        return repository.save(user);
+
+        User saved = repository.save(user);
+        return mapper.toDTO(saved);
     }
 
     @Transactional
