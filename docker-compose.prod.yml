@@ -1,7 +1,7 @@
 services:
 
   app:
-    image: alexyekymov/calories-manager:${APP_VERSION}
+    image: alexyekymov/calories-manager:${APP_VERSION:-latest}
     container_name: caloman-app
     networks:
       - caloman-net
