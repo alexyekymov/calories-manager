@@ -1,9 +1,14 @@
 [![Docker Build](https://github.com/alexyekymov/calories-manager/actions/workflows/docker-build.yml/badge.svg)](https://github.com/alexyekymov/calories-manager/actions/workflows/docker-build.yml)
-# Calories manager 
+<p align="center">
+ <img src="./assets/logo_v1.svg" alt="CM logo"/>
+</p>
+
+# Calories manager
 A lightweight calorie tracker featuring basic authentication and role-based access control.
 Admins can manage users, while regular users can manage their own profile and meal data via a REST API with basic authentication. Food entries can be filtered by date and time.
 
-![CM logo](./assets/logo_v1.svg)
+## Demo
+The application is deployed and available as a demo. You can explore the API using Swagger UI: [Open Swagger](https://calories-manager.overlax.pp.ua/)
 
 ## Tech Stack
 - Java 21
