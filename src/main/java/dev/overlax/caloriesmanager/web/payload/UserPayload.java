@@ -8,11 +8,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+@Builder
 @Schema(hidden = true)
 public record UserPayload(
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
