@@ -3,6 +3,8 @@
 A lightweight calorie tracker featuring basic authentication and role-based access control.
 Admins can manage users, while regular users can manage their own profile and meal data via a REST API with basic authentication. Food entries can be filtered by date and time.
 
+![CM logo](./assets/logo_v1.svg)
+
 ## Tech Stack
 - Java 21
 - Spring (Boot, Web, Security, Data JPA)
