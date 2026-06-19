@@ -3,6 +3,7 @@ services:
   app:
     image: alexyekymov/calories-manager:${APP_VERSION:-latest}
     container_name: caloman-app
+    restart: unless-stopped
     networks:
       - caloman-net
     depends_on:
@@ -15,6 +16,7 @@ services:
   psql:
     image: postgres:16.3
     container_name: psql-caloman
+    restart: unless-stopped
     networks:
       - caloman-net
     environment:
